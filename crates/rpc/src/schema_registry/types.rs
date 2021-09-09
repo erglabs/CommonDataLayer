@@ -22,7 +22,7 @@ rpc_enum! {
         Bool,
         String,
         Integer,
-        Decimal,
+        Float,
         Any
     ]
 }

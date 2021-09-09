@@ -48,9 +48,9 @@ fn validate_data_inner(
                     return Err(wrong_type("string", path));
                 }
             }
-            ScalarType::Decimal => {
+            ScalarType::Float => {
                 if !data.is_f64() {
-                    return Err(wrong_type("decimal", path));
+                    return Err(wrong_type("float", path));
                 }
             }
             ScalarType::Integer => {

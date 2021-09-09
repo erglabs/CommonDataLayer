@@ -344,7 +344,7 @@ pub mod scalar_type {
         Bool = 0,
         String = 1,
         Integer = 2,
-        Decimal = 3,
+        Float = 3,
         Any = 4,
     }
 }
