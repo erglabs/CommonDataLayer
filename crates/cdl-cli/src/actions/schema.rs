@@ -1,6 +1,6 @@
 use std::{collections::HashMap, convert::TryInto, path::PathBuf};
 
-use ::types::schemas::SchemaFieldDefinition;
+use ::types::schemas::SchemaDefinition;
 use rpc::schema_registry::{
     types::SchemaType,
     Empty,
@@ -39,7 +39,7 @@ pub async fn add_schema(
     schema_type: SchemaType,
     registry_addr: String,
 ) -> anyhow::Result<()> {
-    let definition = read_json::<HashMap<String, SchemaFieldDefinition>>(file)?;
+    let definition = read_json::<SchemaDefinition>(file)?;
 
     let mut client = rpc::schema_registry::connect(registry_addr).await?;
     let response = client
@@ -75,7 +75,7 @@ pub async fn update_schema(
 ) -> anyhow::Result<()> {
     let mut client = rpc::schema_registry::connect(registry_addr).await?;
     let definition = if update_definition {
-        convert_definition_to_rpc(read_json::<HashMap<String, SchemaFieldDefinition>>(file)?)?
+        convert_definition_to_rpc(read_json::<SchemaDefinition>(file)?)?
     } else {
         HashMap::new()
     };

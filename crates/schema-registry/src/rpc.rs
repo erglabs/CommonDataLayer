@@ -5,7 +5,7 @@ use std::{
     time::Duration,
 };
 
-use ::types::schemas::SchemaFieldDefinition;
+use ::types::schemas::{SchemaDefinition, SchemaFieldDefinition};
 use bb8::Pool;
 use cdl_dto::{materialization::Relation, TryFromRpc, TryIntoRpc};
 use communication_utils::{metadata_fetcher::MetadataFetcher, Result};
@@ -650,7 +650,7 @@ fn vec_into_rpc(views: Vec<FullView>) -> Result<Vec<rpc::schema_registry::FullVi
 
 fn convert_definition_from_rpc(
     definition: HashMap<String, SchemaFieldDefinitionRpc>,
-) -> Result<HashMap<String, SchemaFieldDefinition>, Status> {
+) -> Result<SchemaDefinition, Status> {
     definition
         .into_iter()
         .map(|(field_name, field_definition)| {
@@ -664,7 +664,7 @@ fn convert_definition_from_rpc(
 }
 
 fn convert_definition_to_rpc(
-    definition: HashMap<String, SchemaFieldDefinition>,
+    definition: SchemaDefinition,
 ) -> Result<HashMap<String, SchemaFieldDefinitionRpc>, Status> {
     definition
         .into_iter()

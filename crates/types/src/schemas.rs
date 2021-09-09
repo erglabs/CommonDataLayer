@@ -11,6 +11,8 @@ use rpc::schema_registry::{
 };
 use serde::{Deserialize, Serialize};
 
+pub type SchemaDefinition = HashMap<String, SchemaFieldDefinition>;
+
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub struct SchemaFieldDefinition {

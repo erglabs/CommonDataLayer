@@ -1,6 +1,4 @@
-use std::collections::HashMap;
-
-use ::types::schemas::SchemaFieldDefinition;
+use ::types::schemas::SchemaDefinition;
 use rpc::schema_registry::types::SchemaType;
 use serde::{Deserialize, Serialize};
 use sqlx::types::Json;
@@ -16,7 +14,7 @@ pub struct Schema {
     pub query_address: String,
     #[serde(rename = "type")]
     pub schema_type: SchemaType,
-    pub definition: Json<HashMap<String, SchemaFieldDefinition>>,
+    pub definition: Json<SchemaDefinition>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -26,7 +24,7 @@ pub struct NewSchema {
     pub query_address: String,
     #[serde(rename = "type")]
     pub schema_type: SchemaType,
-    pub definition: Json<HashMap<String, SchemaFieldDefinition>>,
+    pub definition: Json<SchemaDefinition>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -36,7 +34,7 @@ pub struct SchemaUpdate {
     pub query_address: Option<String>,
     #[serde(rename = "type")]
     pub schema_type: Option<SchemaType>,
-    pub definition: Option<Json<HashMap<String, SchemaFieldDefinition>>>,
+    pub definition: Option<Json<SchemaDefinition>>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -47,6 +45,6 @@ pub struct FullSchema {
     pub query_address: String,
     #[serde(rename = "type")]
     pub schema_type: SchemaType,
-    pub definition: Json<HashMap<String, SchemaFieldDefinition>>,
+    pub definition: Json<SchemaDefinition>,
     pub views: Vec<FullView>,
 }

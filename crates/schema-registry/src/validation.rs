@@ -1,15 +1,10 @@
-use std::collections::HashMap;
-
-use ::types::schemas::{SchemaFieldDefinition, SchemaFieldType};
+use ::types::schemas::{SchemaDefinition, SchemaFieldDefinition, SchemaFieldType};
 use rpc::schema_registry::types::ScalarType;
 use serde_json::Value;
 
 use crate::error::{RegistryError, RegistryResult};
 
-pub fn validate_data(
-    data: &Value,
-    schema_definition: &HashMap<String, SchemaFieldDefinition>,
-) -> RegistryResult<()> {
+pub fn validate_data(data: &Value, schema_definition: &SchemaDefinition) -> RegistryResult<()> {
     let fields = data.as_object().ok_or_else(|| {
         RegistryError::InvalidData("Data must be an object at the top level".to_owned())
     })?;
@@ -123,7 +118,7 @@ mod tests {
 
     use super::*;
 
-    fn schema_required() -> HashMap<String, SchemaFieldDefinition> {
+    fn schema_required() -> SchemaDefinition {
         hashmap! {
             "field A".to_owned() => SchemaFieldDefinition {
                 optional: false,
@@ -132,7 +127,7 @@ mod tests {
         }
     }
 
-    fn schema_optional() -> HashMap<String, SchemaFieldDefinition> {
+    fn schema_optional() -> SchemaDefinition {
         hashmap! {
             "foo".to_owned() => SchemaFieldDefinition {
                 optional: true,
@@ -146,7 +141,7 @@ mod tests {
         }
     }
 
-    fn schema_array(allow_null_elements: bool) -> HashMap<String, SchemaFieldDefinition> {
+    fn schema_array(allow_null_elements: bool) -> SchemaDefinition {
         hashmap! {
             "foo".to_owned() => SchemaFieldDefinition {
                 optional: true,

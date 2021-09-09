@@ -4,7 +4,7 @@ use std::{
     path::PathBuf,
 };
 
-use ::types::schemas::SchemaFieldDefinition;
+use ::types::schemas::{SchemaDefinition, SchemaFieldDefinition};
 use anyhow::Context;
 use rpc::schema_registry::SchemaFieldDefinition as SchemaFieldDefinitionRpc;
 use serde::de::DeserializeOwned;
@@ -23,7 +23,7 @@ pub fn read_json<T: DeserializeOwned>(file: Option<PathBuf>) -> anyhow::Result<T
 
 pub fn convert_definition_from_rpc(
     definition: HashMap<String, SchemaFieldDefinitionRpc>,
-) -> anyhow::Result<HashMap<String, SchemaFieldDefinition>> {
+) -> anyhow::Result<SchemaDefinition> {
     definition
         .into_iter()
         .map(|(field_name, field_definition)| {
@@ -37,7 +37,7 @@ pub fn convert_definition_from_rpc(
 }
 
 pub fn convert_definition_to_rpc(
-    definition: HashMap<String, SchemaFieldDefinition>,
+    definition: SchemaDefinition,
 ) -> anyhow::Result<HashMap<String, SchemaFieldDefinitionRpc>> {
     definition
         .into_iter()

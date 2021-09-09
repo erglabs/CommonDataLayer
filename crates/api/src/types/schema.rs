@@ -3,7 +3,7 @@ use std::{
     convert::{TryFrom, TryInto},
 };
 
-use ::types::schemas::SchemaFieldDefinition;
+use ::types::schemas::{SchemaDefinition, SchemaFieldDefinition};
 use async_graphql::{FieldResult, InputObject, Json, SimpleObject};
 use rpc::schema_registry::types::SchemaType;
 use uuid::Uuid;
@@ -24,7 +24,7 @@ pub struct FullSchema {
     /// Whether this schema represents documents or timeseries data.
     pub schema_type: SchemaType,
     /// The format of data stored under this schema.
-    pub definition: Json<HashMap<String, SchemaFieldDefinition>>,
+    pub definition: Json<SchemaDefinition>,
     /// All views belonging to this schema.
     pub views: Vec<View>,
 }
@@ -71,7 +71,7 @@ pub struct NewSchema {
     /// Destination to which data is inserted by data-router.
     pub insert_destination: String,
     /// Definition is stored as a JSON value and therefore needs to be valid JSON.
-    pub definition: Json<HashMap<String, SchemaFieldDefinition>>,
+    pub definition: Json<SchemaDefinition>,
     /// Whether the schema stores documents or timeseries data.
     #[graphql(name = "type")]
     pub schema_type: SchemaType,
@@ -110,7 +110,7 @@ pub struct UpdateSchema {
     #[graphql(name = "type")]
     pub schema_type: Option<SchemaType>,
     /// Definition of the data stored under this schema.
-    pub definition: Option<Json<HashMap<String, SchemaFieldDefinition>>>,
+    pub definition: Option<Json<SchemaDefinition>>,
 }
 
 impl UpdateSchema {
