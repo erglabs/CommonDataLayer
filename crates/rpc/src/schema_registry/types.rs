@@ -1,4 +1,4 @@
-use super::{scalar_type, schema_type};
+use super::{scalar_type, schema_field_type_flag, schema_type};
 
 rpc_enum! {
     SchemaType,
@@ -24,5 +24,18 @@ rpc_enum! {
         Integer,
         Float,
         Any
+    ]
+}
+
+rpc_enum! {
+    SchemaFieldTypeFlag,
+    schema_field_type_flag::Type,
+    field_type,
+    "schema field type",
+    "schema_field_type_enum",
+    [
+        Scalar,
+        Object,
+        Array
     ]
 }

@@ -4,10 +4,10 @@ use std::{
 };
 
 use rpc::schema_registry::{
-    schema_field_type,
-    types::ScalarType,
+    types::{ScalarType, SchemaFieldTypeFlag},
     SchemaFieldDefinition as SchemaFieldDefinitionRpc,
     SchemaFieldType as SchemaFieldTypeRpc,
+    SchemaFieldTypeFlag as SchemaFieldTypeFlagRpc,
 };
 use serde::{Deserialize, Serialize};
 
@@ -33,27 +33,27 @@ impl TryFrom<SchemaFieldDefinitionRpc> for SchemaFieldDefinition {
 
     fn try_from(definition: SchemaFieldDefinitionRpc) -> Result<Self, Self::Error> {
         let old_type = definition.field_type;
-        let mapped_type = match old_type.field_type {
-            0 => SchemaFieldType::Scalar(
+        let field_type: SchemaFieldTypeFlag = old_type.field_type.try_into()?;
+        let mapped_type = match field_type {
+            SchemaFieldTypeFlag::Scalar => SchemaFieldType::Scalar(
                 old_type
                     .scalar_type
                     .ok_or_else(|| anyhow::anyhow!("Missing scalar type"))?
                     .try_into()?,
             ),
-            1 => SchemaFieldType::Object(
+            SchemaFieldTypeFlag::Object => SchemaFieldType::Object(
                 old_type
                     .field_types
                     .into_iter()
                     .map(|(f_name, f_type)| Ok((f_name, SchemaFieldDefinition::try_from(f_type)?)))
                     .collect::<anyhow::Result<_>>()?,
             ),
-            2 => SchemaFieldType::Array(Box::new(
+            SchemaFieldTypeFlag::Array => SchemaFieldType::Array(Box::new(
                 (*old_type
                     .item_type
                     .ok_or_else(|| anyhow::anyhow!("Missing item type"))?)
                 .try_into()?,
             )),
-            _ => anyhow::bail!("Invalid field type"),
         };
 
         Ok(SchemaFieldDefinition {
@@ -69,13 +69,13 @@ impl TryFrom<SchemaFieldDefinition> for SchemaFieldDefinitionRpc {
     fn try_from(definition: SchemaFieldDefinition) -> Result<Self, Self::Error> {
         let mapped_type = match definition.field_type {
             SchemaFieldType::Scalar(scalar_type) => SchemaFieldTypeRpc {
-                field_type: schema_field_type::Type::Scalar.into(),
+                field_type: SchemaFieldTypeFlagRpc::from(SchemaFieldTypeFlag::Scalar),
                 scalar_type: Some(scalar_type.into()),
                 item_type: None,
                 field_types: HashMap::new(),
             },
             SchemaFieldType::Object(field_types) => SchemaFieldTypeRpc {
-                field_type: schema_field_type::Type::Object.into(),
+                field_type: SchemaFieldTypeFlagRpc::from(SchemaFieldTypeFlag::Object),
                 scalar_type: None,
                 item_type: None,
                 field_types: field_types
@@ -89,7 +89,7 @@ impl TryFrom<SchemaFieldDefinition> for SchemaFieldDefinitionRpc {
                     .collect::<anyhow::Result<_>>()?,
             },
             SchemaFieldType::Array(item_type) => SchemaFieldTypeRpc {
-                field_type: schema_field_type::Type::Array.into(),
+                field_type: SchemaFieldTypeFlagRpc::from(SchemaFieldTypeFlag::Array),
                 scalar_type: None,
                 item_type: Some(Box::new(SchemaFieldDefinitionRpc::try_from(*item_type)?)),
                 field_types: HashMap::new(),

@@ -349,19 +349,12 @@ pub mod scalar_type {
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SchemaFieldType {
-    #[prost(enumeration = "schema_field_type::Type", required, tag = "1")]
+pub struct SchemaFieldTypeFlag {
+    #[prost(enumeration = "schema_field_type_flag::Type", required, tag = "1")]
     pub field_type: i32,
-    #[prost(message, optional, tag = "2")]
-    pub scalar_type: ::core::option::Option<ScalarType>,
-    #[prost(map = "string, message", tag = "3")]
-    pub field_types:
-        ::std::collections::HashMap<::prost::alloc::string::String, SchemaFieldDefinition>,
-    #[prost(message, optional, boxed, tag = "4")]
-    pub item_type: ::core::option::Option<::prost::alloc::boxed::Box<SchemaFieldDefinition>>,
 }
-/// Nested message and enum types in `SchemaFieldType`.
-pub mod schema_field_type {
+/// Nested message and enum types in `SchemaFieldTypeFlag`.
+pub mod schema_field_type_flag {
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Type {
@@ -369,6 +362,18 @@ pub mod schema_field_type {
         Object = 1,
         Array = 2,
     }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SchemaFieldType {
+    #[prost(message, required, tag = "1")]
+    pub field_type: SchemaFieldTypeFlag,
+    #[prost(message, optional, tag = "2")]
+    pub scalar_type: ::core::option::Option<ScalarType>,
+    #[prost(map = "string, message", tag = "3")]
+    pub field_types:
+        ::std::collections::HashMap<::prost::alloc::string::String, SchemaFieldDefinition>,
+    #[prost(message, optional, boxed, tag = "4")]
+    pub item_type: ::core::option::Option<::prost::alloc::boxed::Box<SchemaFieldDefinition>>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Empty {}

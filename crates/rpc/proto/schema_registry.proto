@@ -230,13 +230,17 @@ message ScalarType {
     required Type scalar_type = 1;
 }
 
-message SchemaFieldType {
+message SchemaFieldTypeFlag {
     enum Type {
         Scalar = 0;
         Object = 1;
         Array = 2;
     }
     required Type field_type = 1;
+}
+
+message SchemaFieldType {
+    required SchemaFieldTypeFlag field_type = 1;
     optional ScalarType scalar_type = 2;
     map<string, SchemaFieldDefinition> field_types = 3;
     optional SchemaFieldDefinition item_type = 4;
